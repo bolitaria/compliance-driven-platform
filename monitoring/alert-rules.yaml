@@ -1,0 +1,29 @@
+# PrometheusRule
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: platform-demo-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+  - name: platform-demo
+    rules:
+    - alert: HighErrorRateLoanDecisions
+      expr: rate(audit_events_total{action="loan_decision",status="failure"}[5m]) > 0.1
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Elevated loan decision failure rate"
+        description: "The rate of failed loan decisions is above 10% over the last 5 minutes."
+
+    - alert: UnauthorizedAccessAttempt
+      expr: rate(audit_events_total{action="access_control_violation"}[5m]) > 0
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Unauthorized access attempt detected"

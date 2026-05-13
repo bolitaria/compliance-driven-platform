@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install -r app/requirements.txt
+          pip install flake8 pytest
+      - name: Lint with flake8
+        run: flake8 app/ --count --max-complexity=10 --statistics
+      - name: Run unit tests
+        run: pytest app/tests/ -v
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner on filesystem
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          exit-code: '1'
+
+  opa-policy-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check K8s manifests against compliance policies
+        uses: instrumenta/conftest-action@v0
+        with:
+          files: "k8s/*.yaml"
+          policy: "policies/compliance_test.rego"
