@@ -18,5 +18,5 @@ variable "node_count" {
 
 variable "audit_storage_name" {
   description = "Globally unique name for the audit log storage account"
-  default     = "auditlogssa2024"  # Change to a unique value
+  default     = "auditlogssa2024"
 }

@@ -1,5 +1,3 @@
-# Azure resources with encryption and audit enabled by default
-
 terraform {
   required_providers {
     azurerm = {
@@ -35,7 +33,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-# Immutable audit log storage with encryption at rest (SSE-KMS) and mandatory HTTPS
 resource "azurerm_storage_account" "audit_logs" {
   name                     = var.audit_storage_name
   resource_group_name      = azurerm_resource_group.rg.name
@@ -52,6 +49,7 @@ resource "azurerm_storage_account" "audit_logs" {
     }
   }
 
-  # Encryption with customer-managed keys (CMK) – in real code, reference Key Vault
-  # Here we enforce the policy: all storage accounts are encrypted.
+  identity {
+    type = "SystemAssigned"
+  }
 }
