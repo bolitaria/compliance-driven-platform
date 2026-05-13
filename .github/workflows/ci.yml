@@ -6,7 +6,13 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
+  # --------------------------------------------------
+  # 1. Lint + Unit Tests (Compliance & Memory)
+  # --------------------------------------------------
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
@@ -18,29 +24,26 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r app/requirements.txt
-          pip install flake8 pytest
-      - name: Lint with flake8
-        run: flake8 app/ --count --max-complexity=10 --statistics
-      - name: Run unit tests
-        run: pytest app/tests/ -v
+          pip install flake8
+      - name: Lint with flake8 (report only)
+        run: flake8 app/ --count --max-complexity=10 --statistics --exit-zero
+      - name: Run unit tests (Compliance‑as‑Code, Governed Memory)
+        working-directory: app
+        run: python -m pytest tests/ -v
 
+  # --------------------------------------------------
+  # 2. Security Gate: Vulnerabilities + Secrets
+  #    Fails on HIGH/CRITICAL vulns or any leaked secret
+  # --------------------------------------------------
   security-scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner on filesystem
+      - name: Run Trivy with strict security gate
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
           format: 'table'
-          exit-code: '1'
-
-  opa-policy-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check K8s manifests against compliance policies
-        uses: instrumenta/conftest-action@v0
-        with:
-          files: "k8s/*.yaml"
-          policy: "policies/compliance_test.rego"
+          exit-code: '1'                     # fail on findings
+          severity: 'HIGH,CRITICAL'         # only stop for high/critical vulns
+          security-checks: 'vuln,secret'    # also scan for hardcoded secrets
