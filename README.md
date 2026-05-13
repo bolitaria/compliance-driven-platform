@@ -41,7 +41,7 @@ The demo consists of a containerised FastAPI backend serving a React frontend, a
 - Node.js 18+ (to rebuild the frontend)
 - Git
 
-### Run with Docker Compose (recommended)
+### Run with Docker Compose
 
 ```bash
 # Clone the repository
@@ -91,56 +91,7 @@ The pipeline is defined in `.github/workflows/`:
 - **CI** (on push/PR): linting, unit tests, Trivy security scan, OPA policy check on Kubernetes manifests.
 - **CD** (on merge to main): Terraform apply to provision an AKS cluster, deploy K8s manifests, install Prometheus monitoring.
 
-To see it in action, simply push to GitHub and navigate to the **Actions** tab.
-
-## Project Structure (auto-generated)
-platform-demo-principles/
-├── .github/
-│   └── workflows/
-│       ├── ci.yml
-│       └── cd.yml
-├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── audit_logger.py
-│   ├── memory_governor.py
-│   ├── items_storage.py
-│   ├── requirements.txt
-│   └── tests/
-│       ├── __init__.py
-│       ├── test_audit.py
-│       ├── test_compliance.py
-│       └── test_memory.py
-├── frontend/
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── App.js
-│   │   └── index.js
-│   ├── package.json
-│   └── Dockerfile
-├── k8s/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   ├── ingress.yaml
-│   └── network-policy.yaml
-├── terraform/
-│   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-│   └── compliance_test.feature
-├── policies/
-│   ├── access.rego
-│   └── compliance_test.rego
-├── monitoring/
-│   └── alert-rules.yaml
-├── Dockerfile
-├── docker-compose.yml
-├── generate_readme.sh
-├── README.md
-└── .gitignore
-
-### Demonstrating the Principles
+## Demonstrating the Principles
 
 ### 1. Compliance-as-Code
 - **Audit Logging**: Every call to `/api/loan-decision` generates an immutable JSON audit event (traceId, action, status, reasoning). Check logs with:
