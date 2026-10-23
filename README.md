@@ -1,5 +1,7 @@
 # Platform Engineer Demo – Compliance-as-Code, Traceable Reasoning, Governed Memory
 
+[![CD (IaC Validate)](https://github.com/bolitaria/compliance-driven-platform/actions/workflows/cd.yml/badge.svg)](https://github.com/bolitaria/compliance-driven-platform/actions/workflows/cd.yml)
+
 A complete platform engineering showcase that bakes security, auditability, and privacy directly into the application code. This project implements three core principles required by modern regulated environments:
 
 - **Compliance-as-Code**: Every significant action emits an immutable audit event. Access policies are versioned and tested in CI.
