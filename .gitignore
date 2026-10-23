@@ -21,3 +21,9 @@ app/static/
 # OS
 .DS_Store
 Thumbs.db
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info

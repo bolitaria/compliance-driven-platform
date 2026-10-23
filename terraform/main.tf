@@ -34,11 +34,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 resource "azurerm_storage_account" "audit_logs" {
-  name                     = var.audit_storage_name
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  name                      = var.audit_storage_name
+  resource_group_name       = azurerm_resource_group.rg.name
+  location                  = azurerm_resource_group.rg.location
+  account_tier              = "Standard"
+  account_replication_type  = "LRS"
   enable_https_traffic_only = true
   min_tls_version           = "TLS1_2"
 
