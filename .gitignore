@@ -27,3 +27,9 @@ Thumbs.db
 *.tfstate
 *.tfstate.backup
 *.tfstate.lock.info
+
+# Python venv
+.venv/
+venv/
+__pycache__/
+*.pyc
